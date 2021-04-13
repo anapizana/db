@@ -1,15 +1,18 @@
 /*
-Cilindro Mec·nico
+Cilindro Mec√°nico
 Se nos ha encargado:
-Formular la medida de dichos cilindros de manera tal que quepan todas las copias de los Blu-Rays de cada uno de nuestros stores. 
-1.Analizamos numero de pelÌculas:
-Vemos que hay dos tiendas, una con 2,270 pelÌculas y otra con 2,311 pelÌculas
+Formular la medida de cilindros donde quepan todas las copias de los Blu-Rays de cada uno de nuestros stores. 
+
+1.Analizamos numero de pel√≠culas:
+Vemos que hay dos tiendas, una con 2,270 pel√≠culas y otra con 2,311 pel√≠culas
+
 2.Analizamos peso:
-Por el peso sabemos que cada cilindo puede almacenar hasta 100 pelÌculas
-50kg = 50,000 g => Si 1 pelicula pesa 500 g entonces caben 100  pelÌculas por cilindro
-3.Analizamos n˙mero de cilindros requeridos:
+Por el peso sabemos que cada cilindo puede almacenar hasta 100 pel√≠culas
+50kg = 50,000 g => Si 1 pelicula pesa 500 g entonces caben 100  pel√≠culas por cilindro
+
+3.Analizamos n√∫mero de cilindros requeridos:
 Vemos que requerimos 23 cilindros para la tienda 1 y 24 para la tienda 2
-Consideramos que cada espacio por caja mide 30 de altura, 25 de base y 8cm de ancho
+
 */
 
 with total_peliculas as(
@@ -21,22 +24,24 @@ group by tp.store_id, tp.inventario;
 
 /*
 4.Eficientamos espacio de los cilindros:
-Si eficientamos el espacio, se podrÌan acomodar 10 pelÌculas en cada nivel del cilindro con las siguientes caracterÌsticas:
+Consideramos que cada espacio por caja mide 30 de altura, 25 de base y 8cm de ancho
+Si eficientamos el espacio, se podr√≠an acomodar 10 pel√≠culas en cada nivel del cilindro con las siguientes caracter√≠sticas:
 
-Como cada caja mide de ancho 8 cm, imaginamos un dec·gono con lados de 8cm y calculamos su Circunradio:
-El cÌrculo interno del cilindro tendr· un r·dio de: 12.9443cm
-Otras caracterÌsticas:
-Dec·gono	n = 10 sides
+Como cada caja mide de ancho 8 cm, imaginamos un dec√°gono con lados de 8cm y calculamos su circunradio:
+As√≠, el c√≠rculo interno de cada cilindro tendr√° un r√°dio de: 12.9443cm
+
+Otras caracter√≠sticas:
+Dec√°gono	n = 10 sides
 Largo de los lados	a = 8 cm
 Radio interno	r = 12.3107 cm
 Circunradio	R = 12.9443 cm
 Area	A = 492.429 cm2
 Perimetro	P = 80 cm
-Angulo interior	x = 144 ∞
-Angulo exterior	y = 36 ∞
+Angulo interior	x = 144 ¬∞
+Angulo exterior	y = 36 ¬∞
 
-
-Como cada caja mide 21cm de largo + 12.9443 cm = 33.9443 ser· el radio del cilindro
+Radio del cilindro:
+Como cada caja mide 21cm de largo + 12.9443 cm = 33.9443 ser√° el radio del cilindro
 */
 
 with circumradius as(
@@ -48,27 +53,28 @@ from circumradius c;
 
 /*
 
-El cilindro completo tendr·:
-Dec·gono	n = 10 sides
+El cilindro completo tendr√°:
+Dec√°gono	n = 10 sides
 Largo de los lados = 22.0583 cm
 radio interno	r = 33.9443 cm
 Circunradio		R = 35.6911 cm
 Area	A = 4139.01 cm2
 Perimetro	P = 246.577 cm
-Angulo interior	x = 144 ∞
-Angulo exterior	y = 36 ∞
+Angulo interior	x = 144 ¬∞
+Angulo exterior	y = 36 ¬∞
 Volumen = 120,058.30 cm
 
-Como tenemos 10 niveles, sin consideramos un espacio de 2cm entre nivel y 2cm hasta el final del cilindro, 
-tendremos un volumen final de: 128,862.2204 cm^3
+Volumen:
+Como tenemos 10 niveles, si consideramos un espacio de 2cm entre nivel y 2cm hasta el final del cilindro, 
+tendremos un volumen final de: 128,862.2204 cm^3 *10 = 1'288,622
 */
 
 select pi()*(35.6911^2)*32.2 as volumen, 32.2*10 as altura_cm;
 
 /*
- Estos resultados se podrÌan eficientizar, ya que si las cajas no fueran tan grandes, 
- y tomando en cuenta que cada pelÌcula mide 20cm*13.5cm*1.5cm
- el cilindro podrÌa tener un radio interno de 2.427 cm y por lo tanto
+ Estos resultados se podr√≠an eficientizar, ya que si las cajas no fueran tan grandes, 
+ y tomando en cuenta que cada pel√≠cula mide 20cm*13.5cm*1.5cm
+ el cilindro podr√≠a tener un radio interno de 2.427 cm y por lo tanto
  un radio completo de 2.427+13.5 = 15.927:
  */
 
@@ -80,18 +86,18 @@ degrees((2*pi()/10)) as angulo_exterior
 from circumradius_opt c;
 
 /*
- AsÌ el circunradio serÌa de = 16.7466
- Y el volumen por nivel podrÌa ser de: 26431.7815 cm^3
- Y consideranod los 10 niveles el volumen serÌa de: 28,369.9805
+ As√≠ el circunradio ser√≠a de = 16.7466
+ El volumen por nivel podr√≠a ser de: 26431.7815 cm^3
+ Y consideranod los 10 niveles el volumen ser√≠a de: 28,369.9805*10 =283,699
  */
 
 select pi()*(16.7466^2)*32.2 as volumen, 32.2*10 as altura_cm;
 
 /*
-El volumen desperdicado es de: 100,493 cm^3
+El volumen desperdicado es de: 1004923 cm^3
  */
 
-select ceil (128862.2204 - 28369.9805) as volumen_desperdiciado;
+select ceil (1288622.204 - 283699.805) as volumen_desperdiciado;
 
 
 
